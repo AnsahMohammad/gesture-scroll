@@ -45,4 +45,4 @@ def what_gesture(new_img):
     print("Predicted gesture label for the new image:", gesture_label)
     return gesture_label
 
-# what_gesture(cv2.imread("1004.jpg"))
+what_gesture(cv2.imread("test/hand_5.png"))
