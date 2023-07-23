@@ -3,40 +3,9 @@ import cv2
 import numpy as np
 
 model = load_model("./gesture_detection_model.h5")
-# model = load_model("./gesture_model_v2.h5")
 
-categories = {
-    "0": 0,
-    "1": 1,
-    "2": 2,
-    "3": 3,
-    "4": 4,
-    "5": 5,
-    "6": 6,
-    "7": 7,
-    "8": 8,
-    "9": 9,
-    "10": 10,
-    "11": 11,
-    "12": 12,
-    "13": 13,
-    "14": 14,
-    "15": 15,
-    "16": 16,
-    "17": 17,
-    "18": 18,
-    "19": 19,
-}
-# categories = {
-#     "closedFist": 0,
-#     "fingerCircle": 1,
-#     "fingerSymbols": 2,
-#     "multiFingerBend": 3,
-#     "openPalm": 4,
-#     "semiOpenFist": 5,
-#     "semiOpenPalm": 6,
-#     "singleFingerBend": 7
-# }
+categories = {"down": 0, "neutral": 1, "up": 2, "other": 3}
+
 
 def what_gesture(new_img):
     # image_path = "1004.jpg"
@@ -56,4 +25,5 @@ def what_gesture(new_img):
     print("Predicted gesture label for the new image:", gesture_label)
     return gesture_label
 
-# what_gesture(cv2.imread("1004.jpg"))
+
+# what_gesture(cv2.imread("test/hand_5.png"))

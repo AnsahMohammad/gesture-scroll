@@ -1,9 +1,10 @@
 import cv2
 import os
+import time
 
 # Directory to save captured images
 directory = input("Enter directory name : ")
-SAVE_DIR = f"data/{directory}"
+SAVE_DIR = f"{directory}"
 os.makedirs(SAVE_DIR, exist_ok=True)
 
 # Set up camera
@@ -33,7 +34,7 @@ while True:
                    frame.shape[1] // 2 - WINDOW_WIDTH // 2: frame.shape[1] // 2 + WINDOW_WIDTH // 2]
 
         # Save the captured hand image
-        img_name = os.path.join(SAVE_DIR, f"hand_{len(os.listdir(SAVE_DIR))}.png")
+        img_name = os.path.join(SAVE_DIR, f"hand_{time.time()}_{len(os.listdir(SAVE_DIR))}.png")
         cv2.imwrite(img_name, hand_roi)
         print(f"Hand image saved as {img_name}")
 

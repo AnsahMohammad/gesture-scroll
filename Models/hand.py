@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 from gesture_model import what_gesture
 
+
 def draw_hand_rectangle(frame, hand_landmarks):
     h, w, _ = frame.shape
 
@@ -20,6 +21,7 @@ def draw_hand_rectangle(frame, hand_landmarks):
 
     # Draw a rectangle around the hand region
     cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+
 
 def main():
     cap = cv2.VideoCapture(0)
@@ -56,22 +58,31 @@ def main():
                 hand_roi = frame[y_min:y_max, x_min:x_max]
                 if hand_roi.size == 0:
                     continue
-                
+
                 gesture_label = what_gesture(hand_roi)
                 # Display the predicted gesture label on the frame
-                cv2.putText(frame, "Gesture: " + str(gesture_label), (20, 40),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+                cv2.putText(
+                    frame,
+                    "Gesture: " + str(gesture_label),
+                    (20, 40),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 0, 255),
+                    2,
+                    cv2.LINE_AA,
+                )
 
                 # Draw a rectangle around the hand region
                 cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
 
-        cv2.imshow('Hand Detection', frame)
+        cv2.imshow("Hand Detection", frame)
 
         if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit
             break
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     main()
