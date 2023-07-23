@@ -82,10 +82,10 @@ def main():
                 # Perform the scrolling action
                 if scroll_flag:
                     if current_state == "up":
-                        pyautogui.scroll(1)  # Scroll up
+                        pyautogui.scroll(-1)  # Scroll down
 
                     elif current_state == "down":
-                        pyautogui.scroll(-1)  # Scroll down
+                        pyautogui.scroll(1)  # Scroll up
 
                 # Display the predicted gesture label on the frame
                 cv2.putText(
