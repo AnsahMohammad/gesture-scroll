@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 from gesture_model import what_gesture
-
+import pyautogui
 
 def draw_hand_rectangle(frame, hand_landmarks):
     h, w, _ = frame.shape
@@ -27,6 +27,9 @@ def main():
     cap = cv2.VideoCapture(0)
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands()
+
+    current_state = "neutral"
+    scroll_flag = False
 
     while True:
         ret, frame = cap.read()
@@ -59,7 +62,31 @@ def main():
                 if hand_roi.size == 0:
                     continue
 
+                # Get the predicted gesture label
                 gesture_label = what_gesture(hand_roi)
+
+                # Perform scrolling based on the current state and the predicted gesture
+                if current_state == "neutral":
+                    if gesture_label == "up" or gesture_label == "down":
+                        current_state = gesture_label
+                        scroll_flag = True
+
+                elif current_state == "up" and gesture_label == "down":
+                    current_state = "neutral"
+                    scroll_flag = False
+
+                elif current_state == "down" and gesture_label == "up":
+                    current_state = "neutral"
+                    scroll_flag = False
+
+                # Perform the scrolling action
+                if scroll_flag:
+                    if current_state == "up":
+                        pyautogui.scroll(1)  # Scroll up
+
+                    elif current_state == "down":
+                        pyautogui.scroll(-1)  # Scroll down
+
                 # Display the predicted gesture label on the frame
                 cv2.putText(
                     frame,
