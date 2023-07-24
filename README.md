@@ -21,15 +21,22 @@ Once you have installed the necessary requirements, you can follow the steps bel
 1. Clone the repository to your computer.
 2. Open a terminal window and navigate to the directory where you cloned the repository.
 3. Run the following command to start the tool:
-```
+```bash
 pip install -r requirements.txt
 cd Models
 python scroller.py
 ```
+OR
+
+3. Run
+```bash
+chmod +x run.sh
+./run.sh
+```
 
 The tool will now start and will be listening for hand gestures. To perform an action, simply make the corresponding gesture in front of the webcam. For example, to scroll up, make a scrolling gesture with your index finger.
 
-To exit the tool, press `Escape` key.
+4. To exit the tool, press `Escape` key.
 
 ## How to Use
 
