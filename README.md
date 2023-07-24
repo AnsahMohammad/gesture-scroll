@@ -10,7 +10,7 @@
 
 This project aims to create a groundbreaking gesture-based accessibility tool that enables users to interact with digital devices and applications effortlessly through hand gestures. By incorporating computer vision techniques, developed an innovative solution to address accessibility needs and enhance the overall user experience.
 
-![gesture-scroll-vid](https://github.com/AnsahMohammad/gesture-scroll/assets/85027826/abba7ce0-2b48-4e66-945a-1423caf64511)
+![gesture-scroll-vid](./Docs/gesture-scroll-vid.gif)
 
 ## Getting Started
 
