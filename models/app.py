@@ -1,9 +1,9 @@
 import cv2
 import mediapipe as mp
-from gesture_model import fetch_gesture
 import pyautogui
 import tkinter as tk
 from PIL import Image, ImageTk
+from scroller import perform_scroll
 
 class HandDetectionApp:
     def __init__(self, root):
@@ -55,56 +55,7 @@ class HandDetectionApp:
     def update_gui(self):
         ret, frame = self.cap.read()
         if ret:
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            results = self.hands.process(frame_rgb)
-
-            if results.multi_hand_landmarks:
-                for hand_landmarks in results.multi_hand_landmarks:
-                    h, w, _ = frame.shape
-                    x_min, y_min, x_max, y_max = w, h, 0, 0
-                    for landmark in hand_landmarks.landmark:
-                        x, y = int(landmark.x * w), int(landmark.y * h)
-                        if x < x_min:
-                            x_min = x
-                        if x > x_max:
-                            x_max = x
-                        if y < y_min:
-                            y_min = y
-                        if y > y_max:
-                            y_max = y
-
-                    x_min -= self.PADDING
-                    x_max += self.PADDING
-                    y_min -= self.PADDING
-                    y_max += self.PADDING
-
-                    hand_roi = frame[y_min:y_max, x_min:x_max]
-                    if hand_roi.size == 0:
-                        continue
-
-                    gesture_label = fetch_gesture(hand_roi)
-
-                    if self.current_state == "neutral":
-                        if gesture_label == "up" or gesture_label == "down":
-                            self.current_state = gesture_label
-                            self.scroll_flag = True
-
-                    elif self.current_state == "up" and gesture_label == "down":
-                        self.current_state = "neutral"
-                        self.scroll_flag = False
-
-                    elif self.current_state == "down" and gesture_label == "up":
-                        self.current_state = "neutral"
-                        self.scroll_flag = False
-
-                    if self.scroll_flag:
-                        if self.current_state == "up":
-                            pyautogui.scroll(-1)
-                        elif self.current_state == "down":
-                            pyautogui.scroll(1)
-
-                    cv2.putText(frame, "Gesture: " + str(gesture_label), (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-                    cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+            self.current_state, self.scroll_flag = perform_scroll(frame, self.hands, self.current_state, self.scroll_flag, self.PADDING)
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             img = Image.fromarray(frame)
