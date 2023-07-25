@@ -1,6 +1,10 @@
-import cv2
+"""
+Module to Generate the Image data for training the Deep Learning model
+"""
+
 import os
 import time
+import cv2
 
 # Directory to save captured images
 directory = input("Enter directory name : ")
@@ -19,22 +23,40 @@ while True:
         break
 
     # Draw the rectangular window
-    cv2.rectangle(frame, (frame.shape[1] // 2 - WINDOW_WIDTH // 2, frame.shape[0] // 2 - WINDOW_HEIGHT // 2),
-                  (frame.shape[1] // 2 + WINDOW_WIDTH // 2, frame.shape[0] // 2 + WINDOW_HEIGHT // 2), (0, 255, 0), 2)
+    cv2.rectangle(
+        frame,
+        (
+            frame.shape[1] // 2 - WINDOW_WIDTH // 2,
+            frame.shape[0] // 2 - WINDOW_HEIGHT // 2,
+        ),
+        (
+            frame.shape[1] // 2 + WINDOW_WIDTH // 2,
+            frame.shape[0] // 2 + WINDOW_HEIGHT // 2,
+        ),
+        (0, 255, 0),
+        2,
+    )
 
     cv2.imshow("Capture Hand Images", frame)
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):  # Press 'q' to exit the application
         break
-    elif key == ord("c"):  # Press 'c' to capture the hand image
+    if key == ord("c"):  # Press 'c' to capture the hand image
         # Crop the rectangular region containing the hand
         hand_roi = frame[
-                   frame.shape[0] // 2 - WINDOW_HEIGHT // 2: frame.shape[0] // 2 + WINDOW_HEIGHT // 2,
-                   frame.shape[1] // 2 - WINDOW_WIDTH // 2: frame.shape[1] // 2 + WINDOW_WIDTH // 2]
+            frame.shape[0] // 2
+            - WINDOW_HEIGHT // 2 : frame.shape[0] // 2
+            + WINDOW_HEIGHT // 2,
+            frame.shape[1] // 2
+            - WINDOW_WIDTH // 2 : frame.shape[1] // 2
+            + WINDOW_WIDTH // 2,
+        ]
 
         # Save the captured hand image
-        img_name = os.path.join(SAVE_DIR, f"hand_{time.time()}_{len(os.listdir(SAVE_DIR))}.png")
+        img_name = os.path.join(
+            SAVE_DIR, f"hand_{time.time()}_{len(os.listdir(SAVE_DIR))}.png"
+        )
         cv2.imwrite(img_name, hand_roi)
         print(f"Hand image saved as {img_name}")
 
