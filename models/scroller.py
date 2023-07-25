@@ -49,6 +49,7 @@ def main():
                         y_max = y
 
                 hand_roi = frame[y_min:y_max, x_min:x_max]
+                print(f"Dimension : {x_max-x_min}, {y_max-y_min}")
                 if hand_roi.size == 0:
                     continue
 
