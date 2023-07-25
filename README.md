@@ -57,9 +57,11 @@ The tool will now start and will be listening for hand gestures. To perform an a
 If you are having trouble getting the tool to work, please refer to the following 
 Troubleshooting tips:
 
-Make sure that your webcam is properly connected to your computer.
-Make sure that the dependencies are installed correctly.
-Try restarting your computer.
+1. Make sure that your webcam is properly connected to your computer.
+2. Make sure that the dependencies are installed correctly.
+3. Try restarting your computer.
+4. Ensure that other devices such as capture cards are disconnected so your webcam can be detected.
+   
 If you are still having trouble, please open an issue on the GitHub repository.
 
 ## Key Features
