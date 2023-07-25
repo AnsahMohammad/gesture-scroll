@@ -1,11 +1,16 @@
+"""
+GUI Module for the scroller.py
+"""
 import cv2
 import mediapipe as mp
-import pyautogui
 import tkinter as tk
 from PIL import Image, ImageTk
 from scroller import perform_scroll
 
 class HandDetectionApp:
+    """
+    Hand Gesture App Class
+    """
     def __init__(self, root):
         self.root = root
         self.root.title("Gesture Scroll")
@@ -31,6 +36,9 @@ class HandDetectionApp:
         self.hands = mp_hands.Hands(max_num_hands=1)
 
     def start_detection(self):
+        """
+        start detect
+        """
         self.cap = cv2.VideoCapture(0)
         self.update_status("Status: Running")
         self.start_button.config(state=tk.DISABLED)
@@ -39,6 +47,9 @@ class HandDetectionApp:
         self.update_gui()
 
     def stop_detection(self):
+        """
+        stop detect
+        """
         if self.cap:
             self.cap.release()
         self.update_status("Status: Not Running")
@@ -50,9 +61,15 @@ class HandDetectionApp:
         self.scroll_flag = False
 
     def update_status(self, message):
+        """
+        update status function
+        """
         self.status_label.config(text=message)
 
     def update_gui(self):
+        """
+        GUI Updater
+        """
         ret, frame = self.cap.read()
         if ret:
             self.current_state, self.scroll_flag = perform_scroll(frame, self.hands, self.current_state, self.scroll_flag, self.PADDING)
@@ -65,6 +82,9 @@ class HandDetectionApp:
             self.root.after(10, self.update_gui)  # Call this function again after 10ms (for smooth video stream)
 
     def run(self):
+        """
+        Run function
+        """
         self.root.mainloop()
 
 
