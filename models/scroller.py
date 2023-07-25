@@ -1,29 +1,19 @@
+"""
+Accessibility tool Module
+"""
 import cv2
 import mediapipe as mp
-from gesture_model import what_gesture
+from gesture_model import fetch_gesture
 import pyautogui
-
-def draw_hand_rectangle(frame, hand_landmarks):
-    h, w, _ = frame.shape
-
-    # Get the bounding box coordinates for the hand region
-    x_min, y_min, x_max, y_max = w, h, 0, 0
-    for landmark in hand_landmarks.landmark:
-        x, y = int(landmark.x * w), int(landmark.y * h)
-        if x < x_min:
-            x_min = x
-        if x > x_max:
-            x_max = x
-        if y < y_min:
-            y_min = y
-        if y > y_max:
-            y_max = y
-
-    # Draw a rectangle around the hand region
-    cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
 
 
 def main():
+    """
+    Main function :
+    1) Detect Hands
+    2) Predict the Gesture
+    3) Perform the action
+    """
     cap = cv2.VideoCapture(0)
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands()
@@ -63,7 +53,7 @@ def main():
                     continue
 
                 # Get the predicted gesture label
-                gesture_label = what_gesture(hand_roi)
+                gesture_label = fetch_gesture(hand_roi)
 
                 # Perform scrolling based on the current state and the predicted gesture
                 if current_state == "neutral":
