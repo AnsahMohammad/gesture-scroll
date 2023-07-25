@@ -1,6 +1,10 @@
-import cv2
+"""
+Module to Generate the Image data for training the Deep Learning model
+"""
+
 import os
 import time
+import cv2
 
 # Directory to save captured images
 directory = input("Enter directory name : ")
@@ -38,7 +42,7 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):  # Press 'q' to exit the application
         break
-    elif key == ord("c"):  # Press 'c' to capture the hand image
+    if key == ord("c"):  # Press 'c' to capture the hand image
         # Crop the rectangular region containing the hand
         hand_roi = frame[
             frame.shape[0] // 2
