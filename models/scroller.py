@@ -21,6 +21,9 @@ def main():
     current_state = "neutral"
     scroll_flag = False
 
+    # Define the increase in size for the hand region
+    PADDING = 50
+
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -48,7 +51,14 @@ def main():
                     if y > y_max:
                         y_max = y
 
+                # Increase the size of the hand region
+                x_min -= PADDING
+                x_max += PADDING
+                y_min -= PADDING
+                y_max += PADDING
+
                 hand_roi = frame[y_min:y_max, x_min:x_max]
+                print(f"Dimension : {x_max-x_min}, {y_max-y_min}")
                 if hand_roi.size == 0:
                     continue
 
