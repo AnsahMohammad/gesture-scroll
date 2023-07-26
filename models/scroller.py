@@ -14,7 +14,7 @@ start_time = None
 
 
 def perform_scroll(
-    frame, hands, current_state, scroll_flag, activation_flag=False, PADDING=50, TIME_LIMIT=5
+    frame, hands, current_state, scroll_flag, activation_flag=False, PADDING=50, TIME_LIMIT=10
 ):
     """
     Perform scrolling based on hand gestures.
