@@ -83,7 +83,12 @@ class HandDetectionApp:
         ret, frame = self.cap.read()
         if ret:
             self.current_state, self.scroll_flag, self.activation_flag = perform_scroll(
-                frame, self.hands, self.current_state, self.scroll_flag, self.PADDING, self.TIME_LIMIT
+                frame,
+                self.hands,
+                self.current_state,
+                self.scroll_flag,
+                self.PADDING,
+                self.TIME_LIMIT,
             )
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
