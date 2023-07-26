@@ -2,9 +2,13 @@
 Accessibility tool Module
 """
 import cv2
+from statistics import mode
 import mediapipe as mp
 from gesture_model import fetch_gesture
 import pyautogui
+
+# cache array to store the prediction for robust/smooth output
+cache = []
 
 def perform_scroll(frame, hands, current_state, scroll_flag, PADDING):
     """
@@ -55,6 +59,11 @@ def perform_scroll(frame, hands, current_state, scroll_flag, PADDING):
 
             # Get the predicted gesture label
             gesture_label = fetch_gesture(hand_roi)
+            cache.append(gesture_label)
+            if len(cache) < 5:
+                continue
+            gesture_label = mode(cache[-5:])
+
 
             # Perform scrolling based on the current state and the predicted gesture
             if current_state == "neutral":
