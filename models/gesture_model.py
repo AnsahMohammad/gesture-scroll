@@ -21,7 +21,7 @@ def fetch_gesture(img):
     img = img.astype("float32") / 255.0
     img = np.expand_dims(img, axis=0)  # Add a batch dimension
 
-    predicted_probabilities = model.predict(img)
+    predicted_probabilities = model.predict(img, verbose=0)
     predicted_label = np.argmax(predicted_probabilities)
 
     gesture_label = None
@@ -30,7 +30,7 @@ def fetch_gesture(img):
             gesture_label = label
             break
 
-    print("Predicted gesture label for the new image:", gesture_label)
+    print(f"label :{gesture_label} ")
     return gesture_label
 
 
