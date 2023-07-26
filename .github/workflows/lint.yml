@@ -1,10 +1,10 @@
-name: Pylint
+name: Black
 
 on:
   push:
 
 jobs:
-  pylint:
+  black:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,9 +18,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install pylint
+        run: pip install black
 
-      - name: Run pylint on models
-        run: |
-          pylint models
-          pylint generator
+      - name: Format code with Black in models
+        run: black . --check --diff
