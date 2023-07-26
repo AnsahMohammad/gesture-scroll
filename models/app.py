@@ -4,10 +4,12 @@ GUI Module for the scroller.py
 import tkinter as tk
 import cv2
 import mediapipe as mp
+
 # pylint: disable=E0401, E1101, R0902, W0621
 
 from PIL import Image, ImageTk
 from scroller import perform_scroll
+
 
 class HandDetectionApp:
     """

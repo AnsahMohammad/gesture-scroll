@@ -20,5 +20,5 @@ jobs:
       - name: Install dependencies
         run: pip install black
 
-      - name: Format code with Black in models
+      - name: Black check
         run: black . --check --diff

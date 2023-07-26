@@ -19,8 +19,10 @@ class TestScrollFunction(unittest.TestCase):
         # self.assertEqual(gesture_label, "neutral")
 
         if gesture_label != "neutral":
-            warnings.warn(f"Expected 'gesture_label' to be 'neutral', but got '{gesture_label}' instead.",
-                            category=UserWarning)
+            warnings.warn(
+                f"Expected 'gesture_label' to be 'neutral', but got '{gesture_label}' instead.",
+                category=UserWarning,
+            )
 
     # def test_perform_scroll_activation(self):
     #     frame = cv2.imread('./tests/test_image/activation.png')

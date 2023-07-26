@@ -13,6 +13,7 @@ import pyautogui
 cache = []
 START_TIME = None
 
+
 def perform_scroll(
     frame,
     hands,
