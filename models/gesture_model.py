@@ -8,7 +8,7 @@ import numpy as np
 
 model = load_model("../docs/gesture_detection_model.h5")
 
-categories = {"down": 0, "neutral": 1, "up": 2, "other": 3}
+categories = {"down": 0, "neutral": 1, "up": 2, "other": 3, "activation": 4}
 
 
 def fetch_gesture(img):

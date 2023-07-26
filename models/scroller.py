@@ -3,14 +3,19 @@ Accessibility tool Module
 """
 import cv2
 from statistics import mode
+import time
 import mediapipe as mp
 from gesture_model import fetch_gesture
 import pyautogui
 
 # cache array to store the prediction for robust/smooth output
 cache = []
+start_time = None
 
-def perform_scroll(frame, hands, current_state, scroll_flag, PADDING):
+
+def perform_scroll(
+    frame, hands, current_state, scroll_flag, activation_flag=False, PADDING=50, TIME_LIMIT=5
+):
     """
     Perform scrolling based on hand gestures.
 
@@ -26,6 +31,8 @@ def perform_scroll(frame, hands, current_state, scroll_flag, PADDING):
         scroll_flag: The updated scrolling flag.
     """
     # Convert the frame from BGR to RGB for Mediapipe processing
+    global start_time, cache
+
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     # Process the frame with Mediapipe
@@ -64,8 +71,13 @@ def perform_scroll(frame, hands, current_state, scroll_flag, PADDING):
                 continue
             gesture_label = mode(cache[-5:])
 
-
             # Perform scrolling based on the current state and the predicted gesture
+            activation_flag = False
+            if gesture_label == "activation":
+                start_time = time.time()
+                print("Activated at ", start_time)
+                activation_flag = True
+
             if current_state == "neutral":
                 if gesture_label == "up" or gesture_label == "down":
                     current_state = gesture_label
@@ -79,8 +91,19 @@ def perform_scroll(frame, hands, current_state, scroll_flag, PADDING):
                 current_state = "neutral"
                 scroll_flag = False
 
+            # Check if the time limit is reached for "activation" gesture
+            if start_time is not None:
+                elapsed_time = time.time() - start_time
+                print("Elapsed time ", elapsed_time)
+                if elapsed_time >= TIME_LIMIT:
+                    activation_flag = False
+                    start_time = None
+                else:
+                    activation_flag = True
+            print("Start time ", start_time)
+
             # Perform the scrolling action
-            if scroll_flag:
+            if scroll_flag and activation_flag:
                 if current_state == "up":
                     pyautogui.scroll(-1)  # Scroll down
 
@@ -102,7 +125,8 @@ def perform_scroll(frame, hands, current_state, scroll_flag, PADDING):
             # Draw a rectangle around the hand region
             cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
 
-    return current_state, scroll_flag
+    return current_state, scroll_flag, activation_flag
+
 
 # Main function to perform hand detection and scrolling
 def main():
@@ -112,6 +136,7 @@ def main():
 
     current_state = "neutral"
     scroll_flag = False
+    activation_flag = False
 
     PADDING = 50
 
@@ -121,7 +146,10 @@ def main():
             break
 
         # Call perform_scroll function to handle hand detection and scrolling
-        current_state, scroll_flag = perform_scroll(frame, hands, current_state, scroll_flag, PADDING)
+        current_state, scroll_flag, activation_flag = perform_scroll(
+            frame, hands, current_state, scroll_flag, activation_flag
+        )
+        print(f"{current_state}, {scroll_flag}, {activation_flag}")
 
         cv2.imshow("Hand Detection", frame)
 
@@ -130,6 +158,7 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 # Check if the script is run directly
 if __name__ == "__main__":

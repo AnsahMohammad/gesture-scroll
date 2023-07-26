@@ -7,10 +7,12 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from scroller import perform_scroll
 
+
 class HandDetectionApp:
     """
     Hand Gesture App Class
     """
+
     def __init__(self, root):
         self.root = root
         self.root.title("Gesture Scroll")
@@ -18,18 +20,24 @@ class HandDetectionApp:
         self.video_label = tk.Label(root)
         self.video_label.pack()
 
-        self.status_label = tk.Label(root, text="Status: Not Running")
+        self.status_label = tk.Label(root, text="Status: False")
         self.status_label.pack()
 
-        self.start_button = tk.Button(root, text="Start Detection", command=self.start_detection)
+        self.start_button = tk.Button(
+            root, text="Start Detection", command=self.start_detection
+        )
         self.start_button.pack()
 
-        self.stop_button = tk.Button(root, text="Stop Detection", command=self.stop_detection, state=tk.DISABLED)
+        self.stop_button = tk.Button(
+            root, text="Stop Detection", command=self.stop_detection, state=tk.DISABLED
+        )
         self.stop_button.pack()
 
         self.current_state = "neutral"
         self.scroll_flag = False
+        self.activation_flag = False
         self.PADDING = 50
+        self.TIME_LIMIT = 5
 
         self.cap = None
         mp_hands = mp.solutions.hands
@@ -40,7 +48,7 @@ class HandDetectionApp:
         start detect
         """
         self.cap = cv2.VideoCapture(0)
-        self.update_status("Status: Running")
+        self.update_status("Status: False")
         self.start_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.NORMAL)
 
@@ -52,18 +60,20 @@ class HandDetectionApp:
         """
         if self.cap:
             self.cap.release()
-        self.update_status("Status: Not Running")
+        self.update_status("Status: False")
         self.start_button.config(state=tk.NORMAL)
         self.stop_button.config(state=tk.DISABLED)
 
         # Reset state variables after stopping detection
         self.current_state = "neutral"
         self.scroll_flag = False
+        self.activation_flag = False
 
     def update_status(self, message):
         """
         update status function
         """
+        status_message = f"Status: {self.activation_flag}"
         self.status_label.config(text=message)
 
     def update_gui(self):
@@ -72,14 +82,21 @@ class HandDetectionApp:
         """
         ret, frame = self.cap.read()
         if ret:
-            self.current_state, self.scroll_flag = perform_scroll(frame, self.hands, self.current_state, self.scroll_flag, self.PADDING)
+            self.current_state, self.scroll_flag, self.activation_flag = perform_scroll(
+                frame, self.hands, self.current_state, self.scroll_flag, self.PADDING, self.TIME_LIMIT
+            )
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             img = Image.fromarray(frame)
             img = ImageTk.PhotoImage(image=img)
+
+            # Update the status message to include activation_flag
+            status_message = f"Status: {self.activation_flag}"
+            self.update_status(status_message)
+
             self.video_label.img = img
             self.video_label.config(image=img)
-            self.root.after(10, self.update_gui)  # Call this function again after 10ms (for smooth video stream)
+            self.root.after(10, self.update_gui)
 
     def run(self):
         """
