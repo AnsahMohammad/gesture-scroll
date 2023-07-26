@@ -1,9 +1,12 @@
 """
 GUI Module for the scroller.py
 """
+import tkinter as tk
 import cv2
 import mediapipe as mp
-import tkinter as tk
+
+# pylint: disable=E0401, E1101, R0902, W0621
+
 from PIL import Image, ImageTk
 from scroller import perform_scroll
 
@@ -36,8 +39,8 @@ class HandDetectionApp:
         self.current_state = "neutral"
         self.scroll_flag = False
         self.activation_flag = False
-        self.PADDING = 50
-        self.TIME_LIMIT = 5
+        self.padding = 50
+        self.time_limit = 5
 
         self.cap = None
         mp_hands = mp.solutions.hands
@@ -73,7 +76,6 @@ class HandDetectionApp:
         """
         update status function
         """
-        status_message = f"Status: {self.activation_flag}"
         self.status_label.config(text=message)
 
     def update_gui(self):
@@ -83,7 +85,12 @@ class HandDetectionApp:
         ret, frame = self.cap.read()
         if ret:
             self.current_state, self.scroll_flag, self.activation_flag = perform_scroll(
-                frame, self.hands, self.current_state, self.scroll_flag, self.PADDING, self.TIME_LIMIT
+                frame,
+                self.hands,
+                self.current_state,
+                self.scroll_flag,
+                self.padding,
+                self.time_limit,
             )
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

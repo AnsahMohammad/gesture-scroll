@@ -1,20 +1,27 @@
 """
 Accessibility tool Module
 """
-import cv2
-from statistics import mode
+
 import time
+from statistics import mode
+import cv2
 import mediapipe as mp
 from gesture_model import fetch_gesture
 import pyautogui
 
 # cache array to store the prediction for robust/smooth output
 cache = []
-start_time = None
+START_TIME = None
 
 
 def perform_scroll(
-    frame, hands, current_state, scroll_flag, activation_flag=False, PADDING=50, TIME_LIMIT=5
+    frame,
+    hands,
+    current_state,
+    scroll_flag,
+    activation_flag=False,
+    padding=50,
+    time_limit=10,
 ):
     """
     Perform scrolling based on hand gestures.
@@ -24,14 +31,14 @@ def perform_scroll(
         hands: The mediapipe hands object.
         current_state: The current scrolling state.
         scroll_flag: Flag indicating if scrolling is enabled.
-        PADDING: The increase in size for the hand region.
+        padding: The increase in size for the hand region.
 
     Returns:
         current_state: The updated scrolling state.
         scroll_flag: The updated scrolling flag.
     """
     # Convert the frame from BGR to RGB for Mediapipe processing
-    global start_time, cache
+    global START_TIME
 
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -55,10 +62,10 @@ def perform_scroll(
                     y_max = y
 
             # Increase the size of the hand region
-            x_min -= PADDING
-            x_max += PADDING
-            y_min -= PADDING
-            y_max += PADDING
+            x_min -= padding
+            x_max += padding
+            y_min -= padding
+            y_max += padding
 
             hand_roi = frame[y_min:y_max, x_min:x_max]
             if hand_roi.size == 0:
@@ -74,12 +81,12 @@ def perform_scroll(
             # Perform scrolling based on the current state and the predicted gesture
             activation_flag = False
             if gesture_label == "activation":
-                start_time = time.time()
-                print("Activated at ", start_time)
+                START_TIME = time.time()
+                print("Activated at ", START_TIME)
                 activation_flag = True
 
             if current_state == "neutral":
-                if gesture_label == "up" or gesture_label == "down":
+                if gesture_label in ["down", "up"]:
                     current_state = gesture_label
                     scroll_flag = True
 
@@ -92,15 +99,15 @@ def perform_scroll(
                 scroll_flag = False
 
             # Check if the time limit is reached for "activation" gesture
-            if start_time is not None:
-                elapsed_time = time.time() - start_time
+            if START_TIME is not None:
+                elapsed_time = time.time() - START_TIME
                 print("Elapsed time ", elapsed_time)
-                if elapsed_time >= TIME_LIMIT:
+                if elapsed_time >= time_limit:
                     activation_flag = False
-                    start_time = None
+                    START_TIME = None
                 else:
                     activation_flag = True
-            print("Start time ", start_time)
+            print("Start time ", START_TIME)
 
             # Perform the scrolling action
             if scroll_flag and activation_flag:
@@ -130,6 +137,9 @@ def perform_scroll(
 
 # Main function to perform hand detection and scrolling
 def main():
+    """
+    Main function for scroller
+    """
     cap = cv2.VideoCapture(0)
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(max_num_hands=1)
@@ -137,8 +147,6 @@ def main():
     current_state = "neutral"
     scroll_flag = False
     activation_flag = False
-
-    PADDING = 50
 
     while True:
         ret, frame = cap.read()
