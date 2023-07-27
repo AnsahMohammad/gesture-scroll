@@ -147,6 +147,7 @@ def main():
     current_state = "neutral"
     scroll_flag = False
     activation_flag = False
+    output_video = True
 
     while True:
         ret, frame = cap.read()
@@ -159,7 +160,8 @@ def main():
         )
         print(f"{current_state}, {scroll_flag}, {activation_flag}")
 
-        cv2.imshow("Hand Detection", frame)
+        if output_video:
+            cv2.imshow("Hand Detection", frame)
 
         if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit
             break
